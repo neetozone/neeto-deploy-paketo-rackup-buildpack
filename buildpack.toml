@@ -4,6 +4,7 @@ api = "0.7"
   description = "A buildpack for starting a rackup server for a Ruby app"
   homepage = "https://github.com/paketo-buildpacks/rackup"
   id = "neeto-deploy/rackup"
+  version = "0.4.52"
   keywords = ["ruby", "rackup"]
   name = "Paketo Buildpack for Rackup"
 
@@ -12,8 +13,24 @@ api = "0.7"
     uri = "https://github.com/paketo-buildpacks/rackup/blob/main/LICENSE"
 
 [metadata]
-  include-files = ["bin/run", "bin/build", "bin/detect", "buildpack.toml"]
+  include-files = [
+    "buildpack.toml",
+    "linux/amd64/bin/run",
+    "linux/amd64/bin/build",
+    "linux/amd64/bin/detect",
+    "linux/arm64/bin/run",
+    "linux/arm64/bin/build",
+    "linux/arm64/bin/detect",
+  ]
   pre-package = "./scripts/build.sh"
+
+[[targets]]
+  os = "linux"
+  arch = "amd64"
+
+[[targets]]
+  os = "linux"
+  arch = "arm64"
 
 [[stacks]]
   id = "*"

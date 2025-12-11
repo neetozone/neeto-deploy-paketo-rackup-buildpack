@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 
+function util::print::title() {
+  printf "\n\033[0;34m\033[1m%s\033[0m\n" "${1}"
+}
+
+function util::print::info() {
+  printf "\033[0;34m%s\033[0m\n" "${1}"
+}
+
+function util::print::warn() {
+  printf "\033[0;33m\033[1mWARNING:\033[0m %s\n" "${1}"
+}
+
+function util::print::error() {
+  printf "\033[0;31m\033[1mERROR:\033[0m %s\n" "${1}"
+  exit 1
+}
+
+function util::print::success() {
+  printf "\033[0;32m\033[1mSUCCESS:\033[0m %s\n" "${1}"
+}
+#!/usr/bin/env bash
+
 set -eu
 set -o pipefail
 
