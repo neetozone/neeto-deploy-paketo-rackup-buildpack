@@ -69,7 +69,16 @@ function main {
     buildpack_type=extension
   fi
 
+  util::print::info "Buildpack type: ${buildpack_type}"
+  util::print::info "Version: ${version}"
+  util::print::info "Output: ${output}"
+
   buildpack::archive "${version}" "${buildpack_type}"
+  
+  if [[ ! -f "${BUILD_DIR}/buildpack.tgz" ]]; then
+    util::print::error "Failed to create buildpack archive at ${BUILD_DIR}/buildpack.tgz"
+  fi
+
   buildpackage::create "${output}" "${buildpack_type}"
 }
 
@@ -144,26 +153,15 @@ function buildpackage::create() {
 
   util::print::title "Packaging ${buildpack_type}... ${output}"
 
-  if [ "$buildpack_type" == "extension" ]; then
-    cwd=$(pwd)
-    cd ${BUILD_DIR}
-    mkdir cnbdir
-    cd cnbdir
-    cp ../buildpack.tgz .
-    tar -xvf buildpack.tgz
-    rm buildpack.tgz
+  mkdir ${BUILD_DIR}/cnbdir
+  tar -xvf ${BUILD_DIR}/buildpack.tgz -C ${BUILD_DIR}/cnbdir
 
-    pack \
-      extension package "${output}" \
-        --format file
+  pack \
+    "${buildpack_type}" package "${output}" \
+      --path ${BUILD_DIR}/cnbdir \
+      --format file
 
-    cd $cwd
-  else
-    pack \
-      buildpack package "${output}" \
-        --path "${BUILD_DIR}/buildpack.tgz" \
-        --format file
-  fi
+  rm -rf ${BUILD_DIR}/cnbdir
 }
 
 main "${@:-}"
